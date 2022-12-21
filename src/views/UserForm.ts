@@ -1,4 +1,5 @@
 import { User, UserProps } from "../models/User";
+import { UserList } from "./UserList";
 import { View } from "./View";
 
 export class UserForm extends View<User, UserProps> {
@@ -6,7 +7,8 @@ export class UserForm extends View<User, UserProps> {
     return {
       'click:.set-age': this.onSetAgeClick,
       'click:.set-name': this.onSetNameClick,
-      'click:.save-model': this.onSaveClick
+      'click:.save-model': this.onSaveClick,
+      'click:.list-users': this.onListUsers,
     };
   }
 
@@ -28,6 +30,27 @@ export class UserForm extends View<User, UserProps> {
     this.model.setRandomAge();
   };
 
+  onListUsers = (): void => {
+    const users = User.buildUserCollection()
+    users.on('change', () => {
+      const root = document.querySelector('.user-list-div');
+      if(root){
+        root.innerHTML =  '';
+      
+        new UserList(root, users).render();
+      } else {
+        throw new Error('Root element not found');
+      }
+    });
+    
+    users.fetch();
+
+    const list = document.querySelector('.user-list-div');
+    if(list) {
+      list.classList.toggle('hide')
+    }
+  }
+
   template(): string {
     return `
       <div>
@@ -35,6 +58,7 @@ export class UserForm extends View<User, UserProps> {
         <button class="set-name">Change Name</button>
         <button class="set-age">Set Random Age</button>
         <button class="save-model">Save User</button>
+        <button class="list-users">List Users</button>
       </div>
     `;
   }

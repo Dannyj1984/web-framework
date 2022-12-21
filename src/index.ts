@@ -1,7 +1,7 @@
 import { UserEdit } from './views/UserEdit';
 import { User } from './models/User';
 
-const user = User.buildUser({ name: 'NAME', age: 20 });
+const user = User.buildUser({ name: 'Danny', age: 20 });
 
 const root = document.getElementById('root');
 
